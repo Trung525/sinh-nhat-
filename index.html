@@ -232,6 +232,7 @@
     <!-- Top Bar Controls -->
     <div class="w-full max-w-4xl flex items-center justify-between z-20 pt-2 px-2">
       <button 
+        id="topBarLeftBtn"
         onclick="switchToForm()"
         class="px-4 py-2 rounded-full bg-white/80 hover:bg-white text-pink-600 font-bold text-xs sm:text-sm shadow-sm backdrop-blur border border-pink-100 flex items-center gap-1.5 transition-all active:scale-95"
       >
@@ -367,7 +368,7 @@
 
       <!-- File Protocol Warning (Shows only when opened locally via file:///) -->
       <div id="fileProtocolNotice" class="hidden w-full bg-amber-50 border border-amber-200 rounded-2xl p-3 text-left text-[11px] text-amber-800 leading-relaxed">
-        <span class="font-bold">💡 Lưu ý khi mở file cục bộ:</span> Bạn đang chạy file trực tiếp từ máy tính (<code class="bg-amber-100 px-1 rounded">file:///</code>). Mã QR và Link bên dưới sẽ hoạt động trên máy này. Để người khác quét được bằng điện thoại từ xa, hãy đưa file này lên web miễn phí (như <b>GitHub Pages</b>, <b>Vercel</b> hoặc <b>Netlify</b>).
+        <span class="font-bold">💡 Lưu ý khi mở file cục bộ:</span> Bạn đang chạy file trực tiếp từ máy tính (<code class="bg-amber-100 px-1 rounded">file:///</code>). Để người khác quét được bằng điện thoại từ xa, hãy đưa file `index.html` này lên <b>GitHub Pages</b> (đổi tên đúng `index.html`).
       </div>
 
       <!-- QR Code Container -->
@@ -432,6 +433,7 @@
       lilyBloomed: false,
       morphProgress: 0, // 0 = 100% Cake, 1 = 100% Lily Bouquet
       isPlayingMusic: false,
+      isRecipientMode: false,
       audioCtx: null,
       musicTimer: null,
       currentNoteIndex: 0
@@ -1023,6 +1025,14 @@
         photoContainer.classList.add('hidden');
       }
 
+      // If in recipient mode, update button to create a new card
+      const leftBtn = document.getElementById('topBarLeftBtn');
+      if (state.isRecipientMode) {
+        leftBtn.innerHTML = '<span>✨</span> Tự tạo thiệp mới';
+      } else {
+        leftBtn.innerHTML = '<span>✏️</span> Sửa nội dung';
+      }
+
       document.getElementById('formView').classList.add('hidden');
       document.getElementById('cakeView').classList.remove('hidden');
 
@@ -1034,6 +1044,7 @@
     }
 
     function switchToForm() {
+      state.isRecipientMode = false;
       document.getElementById('cakeView').classList.add('hidden');
       document.getElementById('formView').classList.remove('hidden');
     }
@@ -1060,12 +1071,10 @@
       const fullHash = btoa(encodeURIComponent(JSON.stringify(payload)));
       const fullUrl = `${window.location.origin}${window.location.pathname}#w=${fullHash}`;
 
-      // Limit payload for inline QR matrix encoding to under ~750 chars for rapid rendering
       if (fullUrl.length <= 750) {
         return fullUrl;
       }
 
-      // If payload is larger due to attached photos, save locally under a short key ID
       const shortId = 'bday_' + Math.random().toString(36).substring(2, 9);
       try {
         localStorage.setItem(shortId, JSON.stringify(payload));
@@ -1095,11 +1104,9 @@
         canvas.className = "w-[210px] h-[210px] rounded-2xl shadow-inner border border-pink-200 bg-white p-1 block";
         const ctx = canvas.getContext('2d');
 
-        // Draw white background
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvasSize, canvasSize);
 
-        // Draw dark modules in deep pink
         ctx.fillStyle = '#d64065';
         for (let r = 0; r < moduleCount; r++) {
           for (let c = 0; c < moduleCount; c++) {
@@ -1111,7 +1118,6 @@
           }
         }
 
-        // Draw cute cake icon badge in center
         const logoSize = Math.floor(canvasSize * 0.20);
         const centerX = canvasSize / 2;
         const centerY = canvasSize / 2;
@@ -1142,7 +1148,6 @@
 
       document.getElementById('shareLinkInput').value = fullUrl;
 
-      // Toggle local file:// warning notice
       const fileNotice = document.getElementById('fileProtocolNotice');
       if (window.location.protocol === 'file:') {
         fileNotice.classList.remove('hidden');
@@ -1199,13 +1204,17 @@
       }, 2500);
     }
 
+    // ====================================================
+    // URL PARSING & RECIPIENT MODE (DIRECT 3D CARD DISPLAY)
+    // ====================================================
     function parseUrlParams() {
+      let data = null;
+
       if (window.location.hash.startsWith('#w=')) {
         try {
           const raw = window.location.hash.replace('#w=', '');
           const jsonStr = decodeURIComponent(atob(raw));
-          const data = JSON.parse(jsonStr);
-          applyLoadedData(data);
+          data = JSON.parse(jsonStr);
         } catch(err) {
           console.warn('Could not parse share hash', err);
         }
@@ -1214,12 +1223,18 @@
           const key = window.location.hash.replace('#id=', '');
           const cached = localStorage.getItem(key);
           if (cached) {
-            const data = JSON.parse(cached);
-            applyLoadedData(data);
+            data = JSON.parse(cached);
           }
         } catch(err) {
           console.warn('Could not load short link payload', err);
         }
+      }
+
+      if (data) {
+        state.isRecipientMode = true;
+        applyLoadedData(data);
+        // CRITICAL: Directly load the 3D Cake view for the recipient
+        switchToCakeView();
       }
     }
 
@@ -1228,7 +1243,7 @@
       if (data.st) state.subTitle = data.st;
       if (data.m) state.message = data.m;
       if (data.imgs && Array.isArray(data.imgs)) {
-        state.images = data.imgs.map(url => ({ dataUrl: url, sizeInKB: 'Nén' }));
+        state.images = data.imgs.map(url => typeof url === 'string' ? { dataUrl: url, sizeInKB: 'Nén' } : url);
       }
 
       document.getElementById('titleInput').value = state.title;
@@ -1236,74 +1251,6 @@
       document.getElementById('messageInput').value = state.message;
       updateCharCount(document.getElementById('messageInput'));
       renderThumbnails();
-
-      switchToCakeView();
-    }
-
-    function downloadQRCode() {
-      const qrCanvas = document.querySelector('#qrcode canvas');
-      const qrImg = document.querySelector('#qrcode img');
-      if (qrCanvas) {
-        const link = document.createElement('a');
-        link.download = `Ma-QR-Thiep-Sinh-Nhat.png`;
-        link.href = qrCanvas.toDataURL('image/png');
-        link.click();
-      } else if (qrImg && qrImg.src) {
-        const link = document.createElement('a');
-        link.download = `Ma-QR-Thiep-Sinh-Nhat.png`;
-        link.href = qrImg.src;
-        link.click();
-      } else {
-        copyShareableLink();
-      }
-    }
-
-    function copyShareableLink() {
-      const shareUrl = generateShareUrl();
-      document.getElementById('shareLinkInput').value = shareUrl;
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(shareUrl).then(showToast);
-      } else {
-        const input = document.getElementById('shareLinkInput');
-        input.select();
-        document.execCommand('copy');
-        showToast();
-      }
-    }
-
-    function showToast() {
-      const toast = document.getElementById('toast');
-      toast.classList.remove('opacity-0', 'pointer-events-none');
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'pointer-events-none');
-      }, 2500);
-    }
-
-    function parseUrlParams() {
-      if (window.location.hash.startsWith('#w=')) {
-        try {
-          const raw = window.location.hash.replace('#w=', '');
-          const jsonStr = decodeURIComponent(atob(raw));
-          const data = JSON.parse(jsonStr);
-          if (data.t) state.title = data.t;
-          if (data.st) state.subTitle = data.st;
-          if (data.m) state.message = data.m;
-          if (data.imgs && Array.isArray(data.imgs)) {
-            state.images = data.imgs.map(url => ({ dataUrl: url, sizeInKB: 'Nén' }));
-          }
-
-          document.getElementById('titleInput').value = state.title;
-          document.getElementById('subTitleInput').value = state.subTitle;
-          document.getElementById('messageInput').value = state.message;
-          updateCharCount(document.getElementById('messageInput'));
-          renderThumbnails();
-
-          switchToCakeView();
-        } catch(err) {
-          console.warn('Could not parse share hash', err);
-        }
-      }
     }
 
 
