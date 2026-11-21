@@ -858,7 +858,7 @@
     }
 
     // --- AUTOMATIC CLIENT-SIDE IMAGE COMPRESSION (CANVAS) ---
-    function compressImageFile(file, maxDimension = 640, quality = 0.68) {
+    function compressImageFile(file, maxDimension = 360, quality = 0.50) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -1000,6 +1000,11 @@
       state.subTitle = document.getElementById('subTitleInput').value.trim() || "Gửi cậu!";
       state.message = document.getElementById('messageInput').value.trim() || "Chúc chị tuổi mới thật nhiều hạnh phúc!";
 
+      const shareUrl = generateFullShareUrl();
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', shareUrl);
+      }
+
       openShareModal();
     }
 
@@ -1050,46 +1055,49 @@
     }
 
     function generateFullShareUrl() {
-      const payload = {
-        t: state.title,
-        st: state.subTitle,
-        m: state.message,
-        imgs: state.images.map(img => img.dataUrl)
-      };
-      const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
-      return `${window.location.origin}${window.location.pathname}#w=${encoded}`;
-    }
+      // Re-compress images to ultra-compact size if needed to fit in QR payload (< 2400 chars)
+      let photoData = state.images.map(img => img.dataUrl);
 
-    function generateCompactShareUrl() {
-      const payload = {
-        t: state.title,
-        st: state.subTitle,
-        m: state.message,
-        imgs: state.images.map(img => img.dataUrl)
+      const buildUrl = (imgs) => {
+        const payload = {
+          t: state.title,
+          st: state.subTitle,
+          m: state.message,
+          imgs: imgs
+        };
+        const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+        return `${window.location.origin}${window.location.pathname}#w=${encoded}`;
       };
-      
-      const fullHash = btoa(encodeURIComponent(JSON.stringify(payload)));
-      const fullUrl = `${window.location.origin}${window.location.pathname}#w=${fullHash}`;
 
-      if (fullUrl.length <= 750) {
-        return fullUrl;
+      let currentUrl = buildUrl(photoData);
+
+      // If URL exceeds ~2400 chars, perform dynamic canvas downscaling for photos
+      if (currentUrl.length > 2400 && photoData.length > 0) {
+        const downscaledImgs = photoData.map(dataUrl => {
+          const img = new Image();
+          img.src = dataUrl;
+          const canvas = document.createElement('canvas');
+          const maxDim = 200;
+          let w = img.width || 300, h = img.height || 300;
+          if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          return canvas.toDataURL('image/jpeg', 0.40);
+        });
+        currentUrl = buildUrl(downscaledImgs);
       }
 
-      const shortId = 'bday_' + Math.random().toString(36).substring(2, 9);
-      try {
-        localStorage.setItem(shortId, JSON.stringify(payload));
-      } catch(e) {
-        console.warn('LocalStorage save warning:', e);
-      }
-
-      return `${window.location.origin}${window.location.pathname}#id=${shortId}`;
+      return currentUrl;
     }
 
     function renderRealQRCodeCanvas(container, qrText) {
       container.innerHTML = '';
 
       try {
-        const qr = qrcode(0, 'M');
+        // Use Error Correction Level 'L' to maximize data payload capacity (~2953 bytes)
+        const qr = qrcode(0, 'L');
         qr.addData(qrText);
         qr.make();
 
@@ -1144,7 +1152,6 @@
 
     function openShareModal() {
       const fullUrl = generateFullShareUrl();
-      const qrUrl = generateCompactShareUrl();
 
       document.getElementById('shareLinkInput').value = fullUrl;
 
@@ -1156,7 +1163,7 @@
       }
 
       const qrcodeContainer = document.getElementById('qrcode');
-      renderRealQRCodeCanvas(qrcodeContainer, qrUrl);
+      renderRealQRCodeCanvas(qrcodeContainer, fullUrl);
 
       document.getElementById('shareModal').classList.remove('hidden');
     }
@@ -1218,22 +1225,12 @@
         } catch(err) {
           console.warn('Could not parse share hash', err);
         }
-      } else if (window.location.hash.startsWith('#id=')) {
-        try {
-          const key = window.location.hash.replace('#id=', '');
-          const cached = localStorage.getItem(key);
-          if (cached) {
-            data = JSON.parse(cached);
-          }
-        } catch(err) {
-          console.warn('Could not load short link payload', err);
-        }
       }
 
       if (data) {
         state.isRecipientMode = true;
         applyLoadedData(data);
-        // CRITICAL: Directly load the 3D Cake view for the recipient
+        // GUARANTEED: Direct jump into 3D Cake view for recipients
         switchToCakeView();
       }
     }
@@ -2002,6 +1999,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       setupInteractions();
       parseUrlParams();
+      window.addEventListener('hashchange', parseUrlParams);
       
       window.addEventListener('resize', () => {
         if (!document.getElementById('cakeView').classList.contains('hidden')) {
