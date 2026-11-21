@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chúc Mừng Sinh Nhật - Bánh Kem & Bó Hoa Ly 3D Hạt Mịn</title>
+  
+  <!-- Google Fonts: Mali & Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,400;0,600;0,700;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mali: ['Mali', 'cursive', 'sans-serif'],
+            quicksand: ['Quicksand', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              pink: '#ff5c7c',
+              softBg: '#ffe4ec',
+              cardBg: '#fff5f7',
+              accent: '#ff859b',
+              taupeTitle: '#c8a2aa',
+            }
+          },
+          boxShadow: {
+            card: '0 12px 35px rgba(255, 140, 165, 0.2)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: #fff5f7;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .font-handwriting {
+      font-family: 'Mali', cursive;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(1deg); }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.03); }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2.5s ease-in-out infinite;
+    }
+
+    .glass-modal {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    input:focus, textarea:focus {
+      outline: 2px solid #ff5c7c;
+      outline-offset: 1px;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between relative selection:bg-pink-200">
+
+  <!-- Audio Element -->
+  <audio id="customAudioPlayer" loop class="hidden"></audio>
+
+  <!-- ========================================== -->
+  <!-- 1. FORM VIEW ("Nhập dữ liệu")              -->
+  <!-- ========================================== -->
+  <section id="formView" class="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 my-2 transition-all duration-500">
+    <div class="w-full max-w-md bg-[#fff5f7] rounded-[36px] p-6 sm:p-8 border border-pink-100 shadow-card flex flex-col gap-5 relative">
+      
+      <!-- Form Header -->
+      <div class="text-center">
+        <h1 class="font-handwriting text-3xl sm:text-4xl font-bold text-[#ff5c7c] tracking-wide">
+          Nhập dữ liệu
+        </h1>
+        <p class="text-xs sm:text-sm text-pink-400 mt-1 font-medium">Tạo thiệp sinh nhật & Bó hoa ly 3D hạt mịn</p>
+      </div>
+
+      <form id="greetingForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        
+        <!-- Lời chúc tiêu đề -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-pink-100/70 hover:border-pink-200 transition-all">
+          <label class="block text-sm font-bold text-[#7a1c2e] mb-1.5 font-handwriting">
+            Lời chúc tiêu đề
+          </label>
+          <input 
+            type="text" 
+            id="titleInput" 
+            placeholder="Chúc mừng sinh nhật!" 
+            value="Tình thương chị BÍ"
+            class="w-full px-4 py-3 rounded-xl border border-pink-100 bg-pink-50/20 text-slate-700 text-sm font-medium transition-all"
+            required
+          />
+        </div>
+
+        <!-- Tiêu đề lời nhắn -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-pink-100/70 hover:border-pink-200 transition-all">
+          <label class="block text-sm font-bold text-[#7a1c2e] mb-1.5 font-handwriting">
+            Tiêu đề lời nhắn
+          </label>
+          <input 
+            type="text" 
+            id="subTitleInput" 
+            placeholder="Gửi cậu!" 
+            value="Gửi chị yêu thương!"
+            class="w-full px-4 py-3 rounded-xl border border-pink-100 bg-pink-50/20 text-slate-700 text-sm font-medium transition-all"
+            required
+          />
+        </div>
+
+        <!-- Lời nhắn -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-pink-100/70 hover:border-pink-200 transition-all">
+          <label class="block text-sm font-bold text-[#7a1c2e] mb-1.5 font-handwriting">
+            Lời nhắn
+          </label>
+          <textarea 
+            id="messageInput" 
+            rows="3" 
+            maxlength="320"
+            placeholder="Nhập lời nhắn gửi dài bên trong..." 
+            class="w-full px-4 py-2.5 rounded-xl border border-pink-100 bg-pink-50/20 text-slate-700 text-sm font-medium resize-none transition-all"
+            oninput="updateCharCount(this)"
+          >Chúc chị tuổi mới luôn xinh đẹp rực rỡ, ngập tràn may mắn, sức khỏe dồi dào và luôn mỉm cười thật hạnh phúc nhé! Bánh kem ngọt ngào và bó hoa ly tươi thắm nở rộ dành riêng cho chị 🎂🌸✨</textarea>
+          <div class="text-right text-xs text-slate-400 font-mono mt-1" id="charCounter">
+            179 / 320
+          </div>
+        </div>
+
+        <!-- Nhạc nền sinh nhật -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-pink-100/70 hover:border-pink-200 transition-all">
+          <label class="block text-sm font-bold text-[#7a1c2e] mb-1.5 font-handwriting flex items-center justify-between">
+            <span>Nhạc nền sinh nhật 🎵</span>
+            <span id="musicSourceBadge" class="text-[11px] font-normal text-pink-500 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100">
+              Nhạc hộp mộng mơ
+            </span>
+          </label>
+          
+          <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
+          
+          <div class="flex items-center gap-2">
+            <button 
+              type="button" 
+              onclick="document.getElementById('audioFileInput').click()"
+              class="flex-1 py-2.5 px-3 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 font-bold text-xs shadow-sm border border-pink-200 flex items-center justify-center gap-1.5 transition-all"
+            >
+              <span>🎶</span> Tải file nhạc (.mp3, .wav)
+            </button>
+            <button 
+              type="button" 
+              id="clearMusicBtn"
+              onclick="resetToDefaultMusic()"
+              class="hidden py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium text-xs transition-all"
+            >
+              Đặt lại
+            </button>
+          </div>
+          <p id="audioFileName" class="text-xs text-pink-600 font-medium mt-2 truncate hidden">
+            🎵 File: <span id="fileNameText">filename.mp3</span>
+          </p>
+        </div>
+
+        <!-- Upload ảnh tối đa 4 ảnh (Tự động nén siêu nhẹ) -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-pink-100/70 hover:border-pink-200 transition-all">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-sm font-bold text-[#7a1c2e] font-handwriting">
+              Ảnh kỷ niệm (tối đa 4 ảnh)
+            </label>
+            <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-semibold border border-emerald-100">
+              ⚡ Tự động nén nhẹ
+            </span>
+          </div>
+          
+          <input type="file" id="photoFileInput" accept="image/*" multiple class="hidden" onchange="handleImageUpload(event)">
+          
+          <button 
+            type="button" 
+            onclick="document.getElementById('photoFileInput').click()"
+            class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-400 to-[#ff5c7c] hover:from-pink-500 hover:to-[#ff4366] text-white font-bold text-sm shadow-md shadow-pink-300/40 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+          >
+            <span>📷</span> Upload ảnh
+          </button>
+
+          <div id="imageCompressionStatus" class="hidden text-xs text-pink-600 font-medium mt-2 flex items-center gap-1.5">
+            <svg class="animate-spin h-3.5 w-3.5 text-pink-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Đang nén ảnh tối ưu dung lượng...</span>
+          </div>
+
+          <div id="imagePreviewContainer" class="grid grid-cols-4 gap-2 mt-3 empty:hidden"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit"
+          class="w-full py-4 rounded-2xl bg-gradient-to-r from-[#ff5c7c] to-[#ff3b65] text-white font-handwriting text-lg font-bold shadow-lg shadow-pink-300/50 hover:shadow-pink-400/60 hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+        >
+          <span>Tạo thiệp & Mã QR ✨</span>
+        </button>
+
+      </form>
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- 2. STIPPLE 3D STAGE VIEW (Cake & Lily)     -->
+  <!-- ========================================== -->
+  <section id="cakeView" class="hidden fixed inset-0 w-full h-full bg-[#fff5f7] flex flex-col justify-between items-center p-4 select-none z-10 overflow-hidden">
+    
+    <!-- Top Bar Controls -->
+    <div class="w-full max-w-4xl flex items-center justify-between z-20 pt-2 px-2">
+      <button 
+        id="topBarLeftBtn"
+        onclick="switchToForm()"
+        class="px-4 py-2 rounded-full bg-white/80 hover:bg-white text-pink-600 font-bold text-xs sm:text-sm shadow-sm backdrop-blur border border-pink-100 flex items-center gap-1.5 transition-all active:scale-95"
+      >
+        <span>✏️</span> Sửa nội dung
+      </button>
+
+      <button 
+        onclick="openShareModal()"
+        class="px-4 py-2 rounded-full bg-white/80 hover:bg-white text-pink-600 font-bold text-xs sm:text-sm shadow-sm backdrop-blur border border-pink-100 flex items-center gap-1.5 transition-all active:scale-95"
+      >
+        <span>🔗</span> Chia sẻ & Mã QR
+      </button>
+    </div>
+
+    <!-- Title Display -->
+    <div class="text-center z-20 mt-2 max-w-xl px-4">
+      <h1 id="displayTitle" class="font-handwriting text-3xl sm:text-5xl font-bold text-[#c8a2aa] tracking-wider drop-shadow-sm leading-tight">
+        Tình thương chị BÍ
+      </h1>
+    </div>
+
+    <!-- 3D Canvas Stage -->
+    <div class="relative w-full max-w-2xl h-[62vh] sm:h-[68vh] flex items-center justify-center cursor-pointer my-auto" onclick="handleStageClick(event)">
+      <canvas id="cakeCanvas" class="w-full h-full block"></canvas>
+      
+      <!-- Banner hint -->
+      <div id="tapHint" class="absolute top-4 inset-x-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
+        <span class="bg-white/95 text-pink-600 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold shadow-xl animate-bounce flex items-center gap-2 border border-pink-200">
+          🌸 Bó hoa ly hạt mịn 3D đã bung nở! ✨
+        </span>
+      </div>
+    </div>
+
+    <!-- Subtitle Instruction -->
+    <div class="text-center z-20 mb-2">
+      <p id="candleInstruction" class="font-handwriting text-sm sm:text-base text-[#b5838d] font-semibold animate-pulse-subtle">
+        Chạm vào bánh để thổi nến.
+      </p>
+    </div>
+
+    <!-- Bottom Audio Control -->
+    <div class="w-full max-w-4xl flex items-center justify-between z-20 pb-3 px-2">
+      <button 
+        id="musicBtn"
+        onclick="toggleMusic()"
+        class="px-4 py-2 rounded-full bg-[#ffd8e4]/80 hover:bg-[#ffd8e4] text-[#d64065] font-bold text-xs sm:text-sm shadow-sm backdrop-blur border border-pink-200 flex items-center gap-2 transition-all active:scale-95"
+      >
+        <span id="musicDiscIcon" class="inline-block transition-transform duration-700 text-base">💿</span>
+        <span id="musicLabel">Music</span>
+      </button>
+
+      <button 
+        id="viewModalBtn"
+        onclick="openModal()"
+        class="hidden px-5 py-2.5 rounded-full bg-gradient-to-r from-pink-500 to-[#ff5c7c] text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all active:scale-95 animate-pulse"
+      >
+        <span>💌</span> Xem lời nhắn
+      </button>
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- 3. POPUP GREETING CARD MODAL               -->
+  <!-- ========================================== -->
+  <div id="cardModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity duration-300">
+    <div class="glass-modal w-full max-w-md rounded-[36px] p-6 sm:p-8 shadow-2xl border border-white/80 flex flex-col gap-5 relative animate-float max-h-[90vh] overflow-y-auto">
+      
+      <button 
+        onclick="closeModal()" 
+        class="absolute top-4 right-4 w-9 h-9 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-600 font-bold flex items-center justify-center transition-all text-sm"
+      >
+        ✕
+      </button>
+
+      <div class="text-center pt-2">
+        <span class="text-4xl">🌸 🎂 🌸</span>
+        <h2 id="modalSubTitle" class="font-handwriting text-2xl sm:text-3xl font-bold text-[#ff5c7c] mt-2">
+          Gửi cậu!
+        </h2>
+      </div>
+
+      <div id="modalPhotoContainer" class="hidden w-full gap-2 grid grid-cols-2"></div>
+
+      <div class="bg-white/90 rounded-2xl p-5 border border-pink-100 shadow-inner">
+        <p id="modalMessage" class="text-slate-700 font-medium text-sm sm:text-base leading-relaxed whitespace-pre-line text-center">
+          Chúc chị luôn ngập tràn niềm vui và hạnh phúc!
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <button 
+          onclick="relightCandles()"
+          class="flex-1 py-3 px-4 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5"
+        >
+          <span>🕯️</span> Thắp lại nến
+        </button>
+        <button 
+          onclick="openShareModal()"
+          class="flex-1 py-3 px-4 rounded-xl bg-pink-500 hover:bg-pink-600 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-1.5"
+        >
+          <span>📲</span> Mã QR & Link
+        </button>
+        <button 
+          onclick="closeModal()"
+          class="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#ff5c7c] to-[#ff3b65] text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-1.5"
+        >
+          <span>🌸</span> Bó hoa ly
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 4. SHARE & REAL QR CODE MODAL              -->
+  <!-- ========================================== -->
+  <div id="shareModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+    <div class="glass-modal w-full max-w-sm rounded-[36px] p-6 shadow-2xl border border-white/80 flex flex-col items-center text-center gap-4 relative max-h-[92vh] overflow-y-auto">
+      
+      <button 
+        onclick="closeShareModal()" 
+        class="absolute top-4 right-4 w-9 h-9 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-600 font-bold flex items-center justify-center transition-all text-sm"
+      >
+        ✕
+      </button>
+
+      <div>
+        <h3 class="font-handwriting text-2xl font-bold text-[#ff5c7c]">Mã QR Thiệp Sinh Nhật</h3>
+        <p class="text-xs text-slate-500 mt-0.5">Quét bằng camera hoặc gửi đường dẫn trực tiếp</p>
+      </div>
+
+      <!-- File Protocol Warning (Shows only when opened locally via file:///) -->
+      <div id="fileProtocolNotice" class="hidden w-full bg-amber-50 border border-amber-200 rounded-2xl p-3 text-left text-[11px] text-amber-800 leading-relaxed">
+        <span class="font-bold">💡 Lưu ý khi mở file cục bộ:</span> Bạn đang chạy file trực tiếp từ máy tính (<code class="bg-amber-100 px-1 rounded">file:///</code>). Để người khác quét được bằng điện thoại từ xa, hãy đưa file `index.html` này lên <b>GitHub Pages</b> (đổi tên đúng `index.html`).
+      </div>
+
+      <!-- QR Code Container -->
+      <div class="relative bg-white p-4 rounded-3xl shadow-md border-2 border-pink-100 flex flex-col items-center justify-center">
+        <div id="qrcode" class="flex flex-col items-center justify-center min-w-[210px] min-h-[210px]"></div>
+      </div>
+
+      <!-- Copy Link Input Box -->
+      <div class="w-full bg-white/90 rounded-2xl p-2.5 border border-pink-100 flex items-center gap-2 shadow-inner">
+        <input 
+          type="text" 
+          id="shareLinkInput" 
+          readonly 
+          class="w-full bg-transparent text-xs text-slate-600 px-2 font-mono truncate focus:outline-none"
+        />
+        <button 
+          onclick="copyShareableLink()"
+          class="shrink-0 px-3.5 py-2 rounded-xl bg-[#ff5c7c] hover:bg-[#ff4366] text-white font-bold text-xs shadow-sm transition-all"
+        >
+          Sao chép
+        </button>
+      </div>
+
+      <!-- Actions -->
+      <div class="w-full flex flex-col gap-2 pt-1">
+        <button 
+          onclick="downloadQRCode()"
+          class="w-full py-3 rounded-xl bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2"
+        >
+          <span>📥</span> Tải ảnh Mã QR (PNG)
+        </button>
+        <button 
+          onclick="switchToCakeViewFromShare()"
+          class="w-full py-3 rounded-xl bg-gradient-to-r from-[#ff5c7c] to-[#ff3b65] text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2"
+        >
+          <span>✨</span> Trải nghiệm thiệp 3D
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300">
+    Đã sao chép liên kết! ✨
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT ENGINE & COMPRESSION LOGIC      -->
+  <!-- ========================================== -->
+  <script>
+    const state = {
+      title: "Tình thương chị BÍ",
+      subTitle: "Gửi chị yêu thương!",
+      message: "Chúc chị tuổi mới luôn xinh đẹp rực rỡ, ngập tràn may mắn, sức khỏe dồi dào và luôn mỉm cười thật hạnh phúc nhé! Bánh kem ngọt ngào và bó hoa ly tươi thắm nở rộ dành riêng cho chị 🎂🌸✨",
+      images: [], // Array of objects: { dataUrl, sizeInKB }
+      customAudioUrl: null,
+      customAudioName: '',
+      candlesLit: true,
+      lilyBloomed: false,
+      morphProgress: 0, // 0 = 100% Cake, 1 = 100% Lily Bouquet
+      isPlayingMusic: false,
+      isRecipientMode: false,
+      audioCtx: null,
+      musicTimer: null,
+      currentNoteIndex: 0
+    };
+
+    // ====================================================
+    // FULL INLINE QR CODE ENGINE (Kazuhiko Arase - Standard)
+    // ====================================================
+    var qrcode = (function () {
+      function QRCode(typeNumber, errorCorrectionLevel) {
+        this.typeNumber = typeNumber;
+        this.errorCorrectionLevel = errorCorrectionLevel;
+        this.modules = null;
+        this.moduleCount = 0;
+        this.dataCache = null;
+        this.dataList = [];
+      }
+      QRCode.prototype = {
+        addData: function(data) {
+          this.dataList.push(new QR8bitByte(data));
+          this.dataCache = null;
+        },
+        isDark: function(row, col) {
+          if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+            throw new Error(row + "," + col);
+          }
+          return this.modules[row][col];
+        },
+        getModuleCount: function() { return this.moduleCount; },
+        make: function() {
+          if (this.typeNumber < 1) {
+            var typeNumber = 1;
+            for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+              var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectionLevel);
+              var buffer = new QRBitBuffer();
+              var totalDataCount = 0;
+              for (var i = 0; i < rsBlocks.length; i++) totalDataCount += rsBlocks[i].dataCount;
+              for (var i = 0; i < this.dataList.length; i++) {
+                var data = this.dataList[i];
+                buffer.put(data.mode, 4);
+                buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber));
+                data.write(buffer);
+              }
+              if (buffer.getLengthInBits() <= totalDataCount * 8) break;
+            }
+            this.typeNumber = typeNumber;
+          }
+          this.makeImpl(false, this.getBestMaskPattern());
+        },
+        makeImpl: function(test, maskPattern) {
+          this.moduleCount = this.typeNumber * 4 + 17;
+          this.modules = new Array(this.moduleCount);
+          for (var row = 0; row < this.moduleCount; row++) {
+            this.modules[row] = new Array(this.moduleCount);
+            for (var col = 0; col < this.moduleCount; col++) this.modules[row][col] = null;
+          }
+          this.setupPositionProbePattern(0, 0);
+          this.setupPositionProbePattern(this.moduleCount - 7, 0);
+          this.setupPositionProbePattern(0, this.moduleCount - 7);
+          this.setupPositionAdjustPattern();
+          this.setupTimingPattern();
+          this.setupTypeInfo(test, maskPattern);
+          if (this.typeNumber >= 7) this.setupTypeNumber(test);
+          if (this.dataCache == null) this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectionLevel, this.dataList);
+          this.mapData(this.dataCache, maskPattern);
+        },
+        setupPositionProbePattern: function(r, c) {
+          for (var row = -1; row <= 7; row++) {
+            if (r + row <= -1 || this.moduleCount <= r + row) continue;
+            for (var col = -1; col <= 7; col++) {
+              if (c + col <= -1 || this.moduleCount <= c + col) continue;
+              if ((0 <= row && row <= 6 && (col == 0 || col == 6)) ||
+                  (0 <= col && col <= 6 && (row == 0 || row == 6)) ||
+                  (2 <= row && row <= 4 && 2 <= col && col <= 4)) {
+                this.modules[r + row][c + col] = true;
+              } else {
+                this.modules[r + row][c + col] = false;
+              }
+            }
+          }
+        },
+        getBestMaskPattern: function() {
+          var minPenalty = 0, bestMaskPattern = 0;
+          for (var i = 0; i < 8; i++) {
+            this.makeImpl(true, i);
+            var penalty = QRUtil.getLostPoint(this);
+            if (i == 0 || minPenalty > penalty) { minPenalty = penalty; bestMaskPattern = i; }
+          }
+          return bestMaskPattern;
+        },
+        setupTimingPattern: function() {
+          for (var r = 8; r < this.moduleCount - 8; r++) {
+            if (this.modules[r][6] != null) continue;
+            this.modules[r][6] = (r % 2 == 0);
+          }
+          for (var c = 8; c < this.moduleCount - 8; c++) {
+            if (this.modules[6][c] != null) continue;
+            this.modules[6][c] = (c % 2 == 0);
+          }
+        },
+        setupPositionAdjustPattern: function() {
+          var pos = QRUtil.getPatternPosition(this.typeNumber);
+          for (var i = 0; i < pos.length; i++) {
+            for (var j = 0; j < pos.length; j++) {
+              var row = pos[i], col = pos[j];
+              if (this.modules[row][col] != null) continue;
+              for (var r = -2; r <= 2; r++) {
+                for (var c = -2; c <= 2; c++) {
+                  if (r == -2 || r == 2 || c == -2 || c == 2 || (r == 0 && c == 0)) {
+                    this.modules[row + r][col + c] = true;
+                  } else {
+                    this.modules[row + r][col + c] = false;
+                  }
+                }
+              }
+            }
+          }
+        },
+        setupTypeInfo: function(test, maskPattern) {
+          var data = (QRErrorCorrectionLevel[this.errorCorrectionLevel] << 3) | maskPattern;
+          var bits = QRUtil.getBCHTypeInfo(data);
+          for (var i = 0; i < 15; i++) {
+            var mod = (!test && ((bits >> i) & 1) == 1);
+            if (i < 6) this.modules[i][8] = mod;
+            else if (i < 8) this.modules[i + 1][8] = mod;
+            else this.modules[this.moduleCount - 15 + i][8] = mod;
+
+            if (i < 8) this.modules[8][this.moduleCount - i - 1] = mod;
+            else if (i < 9) this.modules[8][15 - i] = mod;
+            else this.modules[8][15 - i - 1] = mod;
+          }
+          this.modules[this.moduleCount - 8][8] = (!test);
+        },
+        setupTypeNumber: function(test) {
+          var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+          for (var i = 0; i < 18; i++) {
+            var mod = (!test && ((bits >> i) & 1) == 1);
+            this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+            this.modules[i % 3 + this.moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+          }
+        },
+        mapData: function(data, maskPattern) {
+          var inc = -1, row = this.moduleCount - 1, bitIndex = 7, byteIndex = 0;
+          for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+            if (col == 6) col--;
+            while (true) {
+              for (var c = 0; c < 2; c++) {
+                if (this.modules[row][col - c] == null) {
+                  var dark = false;
+                  if (byteIndex < data.length) {
+                    dark = ((data[byteIndex] >>> bitIndex) & 1) == 1;
+                  }
+                  var mask = QRUtil.getMask(maskPattern, row, col - c);
+                  if (mask) dark = !dark;
+                  this.modules[row][col - c] = dark;
+                  bitIndex--;
+                  if (bitIndex == -1) { byteIndex++; bitIndex = 7; }
+                }
+              }
+              row += inc;
+              if (row < 0 || this.moduleCount <= row) { row -= inc; inc = -inc; break; }
+            }
+          }
+        }
+      };
+
+      QRCode.createData = function(typeNumber, errorCorrectionLevel, dataList) {
+        var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+        var buffer = new QRBitBuffer();
+        for (var i = 0; i < dataList.length; i++) {
+          var data = dataList[i];
+          buffer.put(data.mode, 4);
+          buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber));
+          data.write(buffer);
+        }
+        var totalDataCount = 0;
+        for (var i = 0; i < rsBlocks.length; i++) totalDataCount += rsBlocks[i].dataCount;
+        if (buffer.getLengthInBits() > totalDataCount * 8) {
+          throw new Error("code length overflow. (" + buffer.getLengthInBits() + ">" + totalDataCount * 8 + ")");
+        }
+        if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) buffer.put(0, 4);
+        while (buffer.getLengthInBits() % 8 != 0) buffer.putBit(false);
+        while (true) {
+          if (buffer.getLengthInBits() >= totalDataCount * 8) break;
+          buffer.put(0xec, 8);
+          if (buffer.getLengthInBits() >= totalDataCount * 8) break;
+          buffer.put(0x11, 8);
+        }
+        return QRCode.createBytes(buffer, rsBlocks);
+      };
+
+      QRCode.createBytes = function(buffer, rsBlocks) {
+        var offset = 0, maxDcCount = 0, maxEcCount = 0;
+        var dcdata = new Array(rsBlocks.length), ecdata = new Array(rsBlocks.length);
+        for (var r = 0; r < rsBlocks.length; r++) {
+          var dcCount = rsBlocks[r].dataCount, ecCount = rsBlocks[r].totalCount - dcCount;
+          maxDcCount = Math.max(maxDcCount, dcCount);
+          maxEcCount = Math.max(maxEcCount, ecCount);
+          dcdata[r] = new Array(dcCount);
+          for (var i = 0; i < dcdata[r].length; i++) dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+          offset += dcCount;
+          var rsPoly = QRUtil.getErrorCorrectionPolynomial(ecCount);
+          var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+          var modPoly = rawPoly.mod(rsPoly);
+          ecdata[r] = new Array(rsPoly.getLength() - 1);
+          for (var i = 0; i < ecdata[r].length; i++) {
+            var modIndex = i + modPoly.getLength() - ecdata[r].length;
+            ecdata[r][i] = (modIndex >= 0) ? modPoly.get(modIndex) : 0;
+          }
+        }
+        var totalCodeCount = 0;
+        for (var i = 0; i < rsBlocks.length; i++) totalCodeCount += rsBlocks[i].totalCount;
+        var data = new Array(totalCodeCount), index = 0;
+        for (var i = 0; i < maxDcCount; i++) {
+          for (var r = 0; r < rsBlocks.length; r++) {
+            if (i < dcdata[r].length) data[index++] = dcdata[r][i];
+          }
+        }
+        for (var i = 0; i < maxEcCount; i++) {
+          for (var r = 0; r < rsBlocks.length; r++) {
+            if (i < ecdata[r].length) data[index++] = ecdata[r][i];
+          }
+        }
+        return data;
+      };
+
+      var QRMode = { MODE_8BIT_BYTE: 1 << 2 };
+      var QRErrorCorrectionLevel = { L: 1, M: 0, Q: 3, H: 2 };
+
+      function QR8bitByte(data) {
+        this.mode = QRMode.MODE_8BIT_BYTE;
+        this.data = data;
+      }
+      QR8bitByte.prototype = {
+        getLength: function() { return unescape(encodeURIComponent(this.data)).length; },
+        write: function(buffer) {
+          var str = unescape(encodeURIComponent(this.data));
+          for (var i = 0; i < str.length; i++) buffer.put(str.charCodeAt(i), 8);
+        }
+      };
+
+      function QRPolynomial(num, shift) {
+        var offset = 0;
+        while (offset < num.length && num[offset] == 0) offset++;
+        this.num = new Array(num.length - offset + shift);
+        for (var i = 0; i < num.length - offset; i++) this.num[i] = num[offset + i];
+      }
+      QRPolynomial.prototype = {
+        get: function(index) { return this.num[index]; },
+        getLength: function() { return this.num.length; },
+        multiply: function(e) {
+          var num = new Array(this.getLength() + e.getLength() - 1);
+          for (var i = 0; i < this.getLength(); i++) {
+            for (var j = 0; j < e.getLength(); j++) {
+              num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j)));
+            }
+          }
+          return new QRPolynomial(num, 0);
+        },
+        mod: function(e) {
+          if (this.getLength() - e.getLength() < 0) return this;
+          var ratio = QRMath.glog(this.get(0)) - QRMath.glog(e.get(0));
+          var num = new Array(this.getLength());
+          for (var i = 0; i < this.getLength(); i++) num[i] = this.get(i);
+          for (var i = 0; i < e.getLength(); i++) {
+            num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio);
+          }
+          return new QRPolynomial(num, 0).mod(e);
+        }
+      };
+
+      function QRRSBlock(totalCount, dataCount) {
+        this.totalCount = totalCount;
+        this.dataCount = dataCount;
+      }
+      QRRSBlock.RS_BLOCK_TABLE = [
+        [1, 26, 19], [1, 26, 16], [1, 26, 13], [1, 26, 9],
+        [1, 44, 34], [1, 44, 28], [1, 44, 22], [1, 44, 16],
+        [1, 70, 55], [1, 70, 44], [2, 35, 17], [2, 35, 13],
+        [1, 100, 80], [2, 50, 32], [2, 50, 24], [4, 25, 9],
+        [1, 134, 108], [2, 67, 43], [2, 33, 15], [2, 33, 11],
+        [2, 86, 68], [4, 43, 27], [4, 43, 19], [4, 43, 15],
+        [2, 98, 78], [4, 49, 31], [2, 32, 14], [4, 39, 13],
+        [2, 121, 97], [2, 60, 38], [4, 40, 18], [4, 40, 14],
+        [2, 146, 116], [3, 58, 36], [4, 36, 16], [4, 36, 12],
+        [2, 192, 152], [4, 69, 43], [6, 43, 19], [6, 43, 15]
+      ];
+      QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+        var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectionLevel);
+        var list = [];
+        for (var i = 0; i < rsBlock[0]; i++) list.push(new QRRSBlock(rsBlock[1], rsBlock[2]));
+        return list;
+      };
+      QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+        switch(errorCorrectionLevel) {
+          case 'L': return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+          case 'M': return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+          case 'Q': return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+          case 'H': return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+        }
+      };
+
+      function QRBitBuffer() { this.buffer = []; this.length = 0; }
+      QRBitBuffer.prototype = {
+        get: function(index) {
+          var bufIndex = Math.floor(index / 8);
+          return ((this.buffer[bufIndex] >>> (7 - index % 8)) & 1) == 1;
+        },
+        put: function(num, length) {
+          for (var i = 0; i < length; i++) this.putBit(((num >>> (length - i - 1)) & 1) == 1);
+        },
+        getLengthInBits: function() { return this.length; },
+        putBit: function(bit) {
+          var bufIndex = Math.floor(this.length / 8);
+          if (this.buffer.length <= bufIndex) this.buffer.push(0);
+          if (bit) this.buffer[bufIndex] |= (0x80 >>> (this.length % 8));
+          this.length++;
+        }
+      };
+
+      var QRUtil = {
+        PATTERN_POSITION_TABLE: [
+          [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34],
+          [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50]
+        ],
+        G15: (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+        G18: (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+        G15_MASK: (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1),
+        getBCHTypeInfo: function(data) {
+          var d = data << 10;
+          while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+            d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15)));
+          }
+          return ((data << 10) | d) ^ QRUtil.G15_MASK;
+        },
+        getBCHTypeNumber: function(data) {
+          var d = data << 12;
+          while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+            d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18)));
+          }
+          return (data << 12) | d;
+        },
+        getBCHDigit: function(data) {
+          var digit = 0;
+          while (data != 0) { digit++; data >>>= 1; }
+          return digit;
+        },
+        getPatternPosition: function(typeNumber) {
+          return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1] || [];
+        },
+        getMask: function(maskPattern, i, j) {
+          switch (maskPattern) {
+            case 0: return (i + j) % 2 == 0;
+            case 1: return i % 2 == 0;
+            case 2: return j % 3 == 0;
+            case 3: return (i + j) % 3 == 0;
+            case 4: return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 == 0;
+            case 5: return (i * j) % 2 + (i * j) % 3 == 0;
+            case 6: return ((i * j) % 2 + (i * j) % 3) % 2 == 0;
+            case 7: return ((i * j) % 3 + (i + j) % 2) % 2 == 0;
+          }
+        },
+        getErrorCorrectionPolynomial: function(errorCorrectionLength) {
+          var a = new QRPolynomial([1], 0);
+          for (var i = 0; i < errorCorrectionLength; i++) {
+            a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0));
+          }
+          return a;
+        },
+        getLengthInBits: function(mode, type) {
+          if (1 <= type && type < 10) return 8;
+          return 16;
+        },
+        getLostPoint: function(qrCode) {
+          var moduleCount = qrCode.getModuleCount();
+          var lostPoint = 0;
+          for (var row = 0; row < moduleCount; row++) {
+            for (var col = 0; col < moduleCount; col++) {
+              var sameCount = 0;
+              var dark = qrCode.isDark(row, col);
+              for (var r = -1; r <= 1; r++) {
+                if (row + r < 0 || moduleCount <= row + r) continue;
+                for (var c = -1; c <= 1; c++) {
+                  if (col + c < 0 || moduleCount <= col + c) continue;
+                  if (r == 0 && c == 0) continue;
+                  if (dark == qrCode.isDark(row + r, col + c)) sameCount++;
+                }
+              }
+              if (sameCount > 5) lostPoint += (3 + sameCount - 5);
+            }
+          }
+          return lostPoint;
+        }
+      };
+
+      var QRMath = {
+        glog: function(n) {
+          if (n < 1) throw new Error("glog(" + n + ")");
+          return QRMath.LOG_TABLE[n];
+        },
+        gexp: function(n) {
+          while (n < 0) n += 255;
+          while (n >= 255) n -= 255;
+          return QRMath.EXP_TABLE[n];
+        },
+        EXP_TABLE: new Array(256),
+        LOG_TABLE: new Array(256)
+      };
+      for (var i = 0; i < 8; i++) QRMath.EXP_TABLE[i] = 1 << i;
+      for (var i = 8; i < 256; i++) QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4] ^ QRMath.EXP_TABLE[i - 5] ^ QRMath.EXP_TABLE[i - 6] ^ QRMath.EXP_TABLE[i - 8];
+      for (var i = 0; i < 255; i++) QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
+
+      return function(typeNumber, errorCorrectionLevel) {
+        var qr = new QRCode(typeNumber || 0, errorCorrectionLevel || 'M');
+        return qr;
+      };
+    })();
+
+    function updateCharCount(textarea) {
+      const counter = document.getElementById('charCounter');
+      counter.innerText = `${textarea.value.length} / 320`;
+    }
+
+    // --- AUTOMATIC CLIENT-SIDE IMAGE COMPRESSION (CANVAS) ---
+    function compressImageFile(file, maxDimension = 640, quality = 0.68) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+          const img = new Image();
+          img.src = e.target.result;
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > maxDimension) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              }
+            } else {
+              if (height > maxDimension) {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            const head = 'data:image/jpeg;base64,';
+            const sizeInBytes = Math.round((dataUrl.length - head.length) * 3 / 4);
+            const sizeInKB = Math.round(sizeInBytes / 1024);
+
+            resolve({ dataUrl, sizeInKB });
+          };
+          img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+      });
+    }
+
+    async function handleImageUpload(e) {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      const remainingSlots = 4 - state.images.length;
+      const filesToProcess = files.slice(0, remainingSlots);
+
+      const statusEl = document.getElementById('imageCompressionStatus');
+      statusEl.classList.remove('hidden');
+
+      try {
+        for (const file of filesToProcess) {
+          if (state.images.length < 4) {
+            const compressed = await compressImageFile(file);
+            state.images.push(compressed);
+          }
+        }
+        renderThumbnails();
+      } catch (err) {
+        console.error('Image compression error:', err);
+      } finally {
+        statusEl.classList.add('hidden');
+        e.target.value = '';
+      }
+    }
+
+    function removeImage(index) {
+      state.images.splice(index, 1);
+      renderThumbnails();
+    }
+
+    function renderThumbnails() {
+      const container = document.getElementById('imagePreviewContainer');
+      container.innerHTML = '';
+      state.images.forEach((imgObj, idx) => {
+        const div = document.createElement('div');
+        div.className = 'relative aspect-square rounded-xl overflow-hidden border border-pink-200 group shadow-sm bg-white';
+        div.innerHTML = `
+          <img src="${imgObj.dataUrl}" class="w-full h-full object-cover" />
+          <span class="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-mono">
+            ${imgObj.sizeInKB} KB
+          </span>
+          <button type="button" onclick="removeImage(${idx})" class="absolute top-1 right-1 bg-black/60 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-500 transition-all">✕</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function handleAudioUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (state.customAudioUrl) {
+        URL.revokeObjectURL(state.customAudioUrl);
+      }
+
+      state.customAudioUrl = URL.createObjectURL(file);
+      state.customAudioName = file.name;
+
+      const player = document.getElementById('customAudioPlayer');
+      player.src = state.customAudioUrl;
+
+      document.getElementById('fileNameText').innerText = file.name;
+      document.getElementById('audioFileName').classList.remove('hidden');
+      document.getElementById('clearMusicBtn').classList.remove('hidden');
+      document.getElementById('musicSourceBadge').innerText = 'Nhạc tùy chỉnh';
+
+      if (state.isPlayingMusic) {
+        stopMusic();
+        playMusic();
+      }
+    }
+
+    function resetToDefaultMusic() {
+      if (state.customAudioUrl) {
+        URL.revokeObjectURL(state.customAudioUrl);
+      }
+      state.customAudioUrl = null;
+      state.customAudioName = '';
+      document.getElementById('audioFileInput').value = '';
+      document.getElementById('audioFileName').classList.add('hidden');
+      document.getElementById('clearMusicBtn').classList.add('hidden');
+      document.getElementById('musicSourceBadge').innerText = 'Nhạc hộp mộng mơ';
+
+      const player = document.getElementById('customAudioPlayer');
+      player.pause();
+      player.src = '';
+
+      if (state.isPlayingMusic) {
+        stopMusic();
+        playMusic();
+      }
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      state.title = document.getElementById('titleInput').value.trim() || "Chúc mừng sinh nhật!";
+      state.subTitle = document.getElementById('subTitleInput').value.trim() || "Gửi cậu!";
+      state.message = document.getElementById('messageInput').value.trim() || "Chúc chị tuổi mới thật nhiều hạnh phúc!";
+
+      openShareModal();
+    }
+
+    function switchToCakeView() {
+      document.getElementById('displayTitle').innerText = state.title;
+      document.getElementById('modalSubTitle').innerText = state.subTitle;
+      document.getElementById('modalMessage').innerText = state.message;
+      
+      const photoContainer = document.getElementById('modalPhotoContainer');
+      photoContainer.innerHTML = '';
+      if (state.images.length > 0) {
+        photoContainer.classList.remove('hidden');
+        const gridCols = state.images.length === 1 ? 'grid-cols-1' : 'grid-cols-2';
+        photoContainer.className = `w-full gap-2 grid ${gridCols}`;
+        
+        state.images.forEach(imgObj => {
+          const img = document.createElement('img');
+          img.src = imgObj.dataUrl;
+          img.className = 'w-full h-28 sm:h-32 object-cover rounded-xl border border-pink-100 shadow-sm transform hover:scale-105 transition-all';
+          photoContainer.appendChild(img);
+        });
+      } else {
+        photoContainer.classList.add('hidden');
+      }
+
+      // If in recipient mode, update button to create a new card
+      const leftBtn = document.getElementById('topBarLeftBtn');
+      if (state.isRecipientMode) {
+        leftBtn.innerHTML = '<span>✨</span> Tự tạo thiệp mới';
+      } else {
+        leftBtn.innerHTML = '<span>✏️</span> Sửa nội dung';
+      }
+
+      document.getElementById('formView').classList.add('hidden');
+      document.getElementById('cakeView').classList.remove('hidden');
+
+      initCakeCanvas();
+
+      if (!state.isPlayingMusic) {
+        toggleMusic();
+      }
+    }
+
+    function switchToForm() {
+      state.isRecipientMode = false;
+      document.getElementById('cakeView').classList.add('hidden');
+      document.getElementById('formView').classList.remove('hidden');
+    }
+
+    function generateFullShareUrl() {
+      const payload = {
+        t: state.title,
+        st: state.subTitle,
+        m: state.message,
+        imgs: state.images.map(img => img.dataUrl)
+      };
+      const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+      return `${window.location.origin}${window.location.pathname}#w=${encoded}`;
+    }
+
+    function generateCompactShareUrl() {
+      const payload = {
+        t: state.title,
+        st: state.subTitle,
+        m: state.message,
+        imgs: state.images.map(img => img.dataUrl)
+      };
+      
+      const fullHash = btoa(encodeURIComponent(JSON.stringify(payload)));
+      const fullUrl = `${window.location.origin}${window.location.pathname}#w=${fullHash}`;
+
+      if (fullUrl.length <= 750) {
+        return fullUrl;
+      }
+
+      const shortId = 'bday_' + Math.random().toString(36).substring(2, 9);
+      try {
+        localStorage.setItem(shortId, JSON.stringify(payload));
+      } catch(e) {
+        console.warn('LocalStorage save warning:', e);
+      }
+
+      return `${window.location.origin}${window.location.pathname}#id=${shortId}`;
+    }
+
+    function renderRealQRCodeCanvas(container, qrText) {
+      container.innerHTML = '';
+
+      try {
+        const qr = qrcode(0, 'M');
+        qr.addData(qrText);
+        qr.make();
+
+        const moduleCount = qr.getModuleCount();
+        const cellSize = Math.max(3, Math.floor(210 / (moduleCount + 4)));
+        const margin = 2;
+        const canvasSize = (moduleCount + margin * 2) * cellSize;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = canvasSize;
+        canvas.height = canvasSize;
+        canvas.className = "w-[210px] h-[210px] rounded-2xl shadow-inner border border-pink-200 bg-white p-1 block";
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+        ctx.fillStyle = '#d64065';
+        for (let r = 0; r < moduleCount; r++) {
+          for (let c = 0; c < moduleCount; c++) {
+            if (qr.isDark(r, c)) {
+              const x = (c + margin) * cellSize;
+              const y = (r + margin) * cellSize;
+              ctx.fillRect(x, y, cellSize, cellSize);
+            }
+          }
+        }
+
+        const logoSize = Math.floor(canvasSize * 0.20);
+        const centerX = canvasSize / 2;
+        const centerY = canvasSize / 2;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, logoSize / 2 + 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffd8e4';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.font = `${Math.floor(logoSize * 0.65)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🎂', centerX, centerY + 1);
+
+        container.appendChild(canvas);
+
+      } catch (err) {
+        console.error('QR rendering error:', err);
+      }
+    }
+
+    function openShareModal() {
+      const fullUrl = generateFullShareUrl();
+      const qrUrl = generateCompactShareUrl();
+
+      document.getElementById('shareLinkInput').value = fullUrl;
+
+      const fileNotice = document.getElementById('fileProtocolNotice');
+      if (window.location.protocol === 'file:') {
+        fileNotice.classList.remove('hidden');
+      } else {
+        fileNotice.classList.add('hidden');
+      }
+
+      const qrcodeContainer = document.getElementById('qrcode');
+      renderRealQRCodeCanvas(qrcodeContainer, qrUrl);
+
+      document.getElementById('shareModal').classList.remove('hidden');
+    }
+
+    function closeShareModal() {
+      document.getElementById('shareModal').classList.add('hidden');
+    }
+
+    function switchToCakeViewFromShare() {
+      closeShareModal();
+      switchToCakeView();
+    }
+
+    function downloadQRCode() {
+      const qrCanvas = document.querySelector('#qrcode canvas');
+      if (qrCanvas) {
+        const link = document.createElement('a');
+        link.download = `Ma-QR-Thiep-Sinh-Nhat.png`;
+        link.href = qrCanvas.toDataURL('image/png');
+        link.click();
+      } else {
+        copyShareableLink();
+      }
+    }
+
+    function copyShareableLink() {
+      const fullUrl = generateFullShareUrl();
+      document.getElementById('shareLinkInput').value = fullUrl;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullUrl).then(showToast);
+      } else {
+        const input = document.getElementById('shareLinkInput');
+        input.select();
+        document.execCommand('copy');
+        showToast();
+      }
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    // ====================================================
+    // URL PARSING & RECIPIENT MODE (DIRECT 3D CARD DISPLAY)
+    // ====================================================
+    function parseUrlParams() {
+      let data = null;
+
+      if (window.location.hash.startsWith('#w=')) {
+        try {
+          const raw = window.location.hash.replace('#w=', '');
+          const jsonStr = decodeURIComponent(atob(raw));
+          data = JSON.parse(jsonStr);
+        } catch(err) {
+          console.warn('Could not parse share hash', err);
+        }
+      } else if (window.location.hash.startsWith('#id=')) {
+        try {
+          const key = window.location.hash.replace('#id=', '');
+          const cached = localStorage.getItem(key);
+          if (cached) {
+            data = JSON.parse(cached);
+          }
+        } catch(err) {
+          console.warn('Could not load short link payload', err);
+        }
+      }
+
+      if (data) {
+        state.isRecipientMode = true;
+        applyLoadedData(data);
+        // CRITICAL: Directly load the 3D Cake view for the recipient
+        switchToCakeView();
+      }
+    }
+
+    function applyLoadedData(data) {
+      if (data.t) state.title = data.t;
+      if (data.st) state.subTitle = data.st;
+      if (data.m) state.message = data.m;
+      if (data.imgs && Array.isArray(data.imgs)) {
+        state.images = data.imgs.map(url => typeof url === 'string' ? { dataUrl: url, sizeInKB: 'Nén' } : url);
+      }
+
+      document.getElementById('titleInput').value = state.title;
+      document.getElementById('subTitleInput').value = state.subTitle;
+      document.getElementById('messageInput').value = state.message;
+      updateCharCount(document.getElementById('messageInput'));
+      renderThumbnails();
+    }
+
+
+    // ====================================================
+    // 3D POINTILLISM MORPH ENGINE (CAKE <-> LILY BOUQUET)
+    // ====================================================
+    let canvas, ctx;
+    let mainParticles = [];
+    let flameParticles = [];
+    let decorativeSparkleParticles = [];
+    let smokeParticles = [];
+    let confettiParticles = [];
+    let floatingPetals = [];
+    let backgroundBokeh = [];
+    
+    let angleY = 0;
+    let targetAngleY = 0;
+    let isDragging = false;
+    let lastMouseX = 0;
+
+    const COLOR_BOTTOM_TIER = ['#e095a4', '#ebabb8', '#d68393', '#f2c4ce', '#ffffff'];
+    const COLOR_MIDDLE_TIER = ['#6e4347', '#855358', '#593438', '#9e6b70', '#ffffff'];
+    const COLOR_TOP_TIER = ['#f4b0be', '#fce2e7', '#ea9ab0', '#ffffff'];
+    const COLOR_PLATE = ['#e0dadb', '#f5f0f1', '#c7c0c1', '#ffffff'];
+    const COLOR_CANDLE_BLUE = ['#6ba8db', '#ffffff', '#8ec0eb'];
+
+    function buildCakePointCloud() {
+      const cakePoints = [];
+
+      function addCylinder(radius, height, yPos, colorPalette, count) {
+        for (let i = 0; i < count; i++) {
+          const h = (Math.random() - 0.5) * height;
+          const r = Math.sqrt(Math.random()) * radius;
+          const theta = Math.random() * Math.PI * 2;
+          const isOuter = Math.random() < 0.35;
+          const finalR = isOuter ? radius * (0.95 + Math.random() * 0.05) : r;
+          const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+
+          cakePoints.push({
+            x: finalR * Math.cos(theta),
+            y: yPos + h,
+            z: finalR * Math.sin(theta),
+            size: Math.random() * 0.9 + 0.7,
+            color: color
+          });
+        }
+      }
+
+      addCylinder(190, 8, 120, COLOR_PLATE, 2000);
+      for (let i = 0; i < 180; i++) {
+        const th = (i / 180) * Math.PI * 2;
+        cakePoints.push({
+          x: 192 * Math.cos(th), y: 118, z: 192 * Math.sin(th),
+          size: 1.4, color: i % 2 === 0 ? '#4a3f41' : '#c9a563'
+        });
+      }
+
+      addCylinder(160, 80, 70, COLOR_BOTTOM_TIER, 6500);
+      addCylinder(120, 65, 0, COLOR_MIDDLE_TIER, 5000);
+      addCylinder(80, 50, -55, COLOR_TOP_TIER, 4000);
+
+      for (let i = 0; i < 48; i++) {
+        const th = (i / 48) * Math.PI * 2;
+        const cx = 162 * Math.cos(th); const cz = 162 * Math.sin(th);
+        for (let j = 0; j < 12; j++) {
+          cakePoints.push({
+            x: cx + (Math.random() - 0.5) * 8, y: 110 + (Math.random() - 0.5) * 8, z: cz + (Math.random() - 0.5) * 8,
+            size: 1.3, color: j % 3 === 0 ? '#ffd700' : '#ffffff'
+          });
+        }
+      }
+      for (let i = 0; i < 12; i++) {
+        const th = (i / 12) * Math.PI * 2;
+        const cx = 124 * Math.cos(th); const cz = 124 * Math.sin(th);
+        for (let j = 0; j < 15; j++) {
+          cakePoints.push({
+            x: cx + (Math.random() - 0.5) * 10, y: -30 + (Math.random() - 0.5) * 10, z: cz + (Math.random() - 0.5) * 10,
+            size: 1.5, color: '#e6194b'
+          });
+        }
+      }
+
+      const candlePositions = [
+        { x: -38, z: -12 }, { x: -18, z: 20 }, { x: 0, z: -26 }, { x: 18, z: 20 }, { x: 38, z: -12 }
+      ];
+      candlePositions.forEach((pos, idx) => {
+        for (let y = -80; y >= -145; y -= 2.5) {
+          for (let k = 0; k < 7; k++) {
+            const th = Math.random() * Math.PI * 2;
+            const isBlue = (Math.floor((y + 145) / 7) % 2 === 0);
+            cakePoints.push({
+              x: pos.x + 4.2 * Math.cos(th), y: y, z: pos.z + 4.2 * Math.sin(th),
+              size: 1.1, color: isBlue ? COLOR_CANDLE_BLUE[idx % COLOR_CANDLE_BLUE.length] : '#ffffff'
+            });
+          }
+        }
+      });
+
+      return cakePoints;
+    }
+
+    function buildLilyPointCloud() {
+      const lilyPoints = [];
+
+      const flowerCenters = [
+        { x: 0, y: -40, z: 30, scale: 1.3 },
+        { x: -55, y: -65, z: -10, scale: 1.1 },
+        { x: 55, y: -60, z: -10, scale: 1.1 },
+        { x: -30, y: -110, z: -25, scale: 1.0 },
+        { x: 35, y: -105, z: -25, scale: 1.0 },
+        { x: 0, y: -135, z: -50, scale: 0.9 },
+        { x: -65, y: -15, z: 25, scale: 0.85 },
+        { x: 65, y: -15, z: 25, scale: 0.85 }
+      ];
+
+      flowerCenters.forEach((fc) => {
+        for (let p = 0; p < 6; p++) {
+          const petalAngle = (p / 6) * Math.PI * 2;
+          for (let step = 0; step < 42; step++) {
+            const progress = step / 42;
+            const r = progress * 58 * fc.scale;
+            const py = fc.y - Math.sin(progress * Math.PI * 0.85) * 32 * fc.scale;
+            const px = fc.x + r * Math.cos(petalAngle);
+            const pz = fc.z + r * Math.sin(petalAngle);
+            
+            const pWidth = Math.sin(progress * Math.PI) * 18 * fc.scale;
+            const density = Math.floor(pWidth * 1.8);
+
+            for (let d = 0; d < density; d++) {
+              const offsetAngle = petalAngle + Math.PI / 2;
+              const sideOffset = (Math.random() - 0.5) * pWidth;
+              
+              let petalColor;
+              if (progress < 0.2) {
+                petalColor = '#a82c58';
+              } else if (progress < 0.68) {
+                petalColor = Math.random() > 0.25 ? '#c94a7c' : '#e87ea1';
+              } else {
+                petalColor = Math.random() > 0.3 ? '#fff5f8' : '#ffffff';
+              }
+
+              if (progress > 0.15 && progress < 0.52 && Math.random() < 0.28) {
+                petalColor = '#5c2c24';
+              }
+
+              lilyPoints.push({
+                x: px + sideOffset * Math.cos(offsetAngle),
+                y: py + (Math.random() - 0.5) * 4,
+                z: pz + sideOffset * Math.sin(offsetAngle),
+                size: Math.random() * 1.5 + 0.9,
+                color: petalColor
+              });
+            }
+          }
+        }
+
+        for (let st = 0; st < 6; st++) {
+          const sAngle = (st / 6) * Math.PI * 2 + 0.2;
+          for (let h = 0; h < 24; h++) {
+            const sr = (h / 24) * 20 * fc.scale;
+            const sx = fc.x + sr * Math.cos(sAngle);
+            const sz = fc.z + sr * Math.sin(sAngle);
+            const sy = fc.y - h * 1.7;
+            const isTip = h >= 19;
+
+            lilyPoints.push({
+              x: sx, y: sy, z: sz,
+              size: isTip ? 3.4 : 1.3,
+              color: isTip ? '#5c2c24' : '#c5e1a5'
+            });
+          }
+        }
+      });
+
+      for (let y = 15; y <= 140; y += 2.5) {
+        const radius = Math.max(12, 55 - (y * 0.3));
+        const count = Math.floor(radius * 3.5);
+        for (let i = 0; i < count; i++) {
+          const theta = Math.random() * Math.PI * 2;
+          const r = Math.sqrt(Math.random()) * radius;
+          lilyPoints.push({
+            x: r * Math.cos(theta),
+            y: y,
+            z: r * Math.sin(theta),
+            size: Math.random() * 1.6 + 0.9,
+            color: Math.random() > 0.35 ? '#2d5a3c' : '#437a53'
+          });
+        }
+      }
+
+      for (let i = 0; i < 18; i++) {
+        const leafAngle = (i / 18) * Math.PI * 2;
+        for (let step = 0; step < 35; step++) {
+          const dist = step * 2.8;
+          const lx = dist * Math.cos(leafAngle);
+          const lz = dist * Math.sin(leafAngle);
+          const ly = 30 + Math.pow(step * 0.09, 1.8) * 15;
+          for (let k = 0; k < 6; k++) {
+            lilyPoints.push({
+              x: lx + (Math.random() - 0.5) * 8,
+              y: ly + (Math.random() - 0.5) * 6,
+              z: lz + (Math.random() - 0.5) * 8,
+              size: Math.random() * 1.5 + 0.9,
+              color: '#346b45'
+            });
+          }
+        }
+      }
+
+      return lilyPoints;
+    }
+
+    function buildDecorativeSparkleParticles() {
+      decorativeSparkleParticles = [];
+
+      for (let i = 0; i < 120; i++) {
+        if (i % 6 < 3) {
+          const angle = (i / 120) * Math.PI * 2;
+          const r = 110 + Math.sin(angle * 3) * 15;
+          decorativeSparkleParticles.push({
+            x: r * Math.cos(angle),
+            y: -120 + Math.cos(angle * 2) * 20,
+            z: r * Math.sin(angle),
+            size: 2.2,
+            color: '#b03a5b',
+            type: 'dashed'
+          });
+        }
+      }
+
+      for (let i = 0; i < 100; i++) {
+        if (i % 5 < 3) {
+          const angle = (i / 100) * Math.PI * 2;
+          const r = 100 + Math.cos(angle * 2) * 12;
+          decorativeSparkleParticles.push({
+            x: r * Math.cos(angle),
+            y: -10 + Math.sin(angle * 3) * 25,
+            z: r * Math.sin(angle),
+            size: 2.2,
+            color: '#1b7a60',
+            type: 'dashed'
+          });
+        }
+      }
+
+      const icons = ['💖', '✨', '🌸', '💖', '✨'];
+      for (let i = 0; i < 24; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.random() * 120 + 40;
+        decorativeSparkleParticles.push({
+          x: r * Math.cos(angle),
+          y: -160 + Math.random() * 220,
+          z: r * Math.sin(angle),
+          size: Math.random() * 2 + 1.5,
+          color: Math.random() > 0.5 ? '#ff4081' : '#ffffff',
+          symbol: icons[i % icons.length],
+          type: 'symbol'
+        });
+      }
+    }
+
+    function initCakeCanvas() {
+      canvas = document.getElementById('cakeCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const cakePts = buildCakePointCloud();
+      const lilyPts = buildLilyPointCloud();
+
+      const totalParticles = Math.max(cakePts.length, lilyPts.length);
+      mainParticles = [];
+
+      for (let i = 0; i < totalParticles; i++) {
+        const cPt = cakePts[i % cakePts.length];
+        const lPt = lilyPts[i % lilyPts.length];
+
+        mainParticles.push({
+          cakeX: cPt.x, cakeY: cPt.y, cakeZ: cPt.z,
+          cakeColor: cPt.color, cakeSize: cPt.size,
+          lilyX: lPt.x, lilyY: lPt.y, lilyZ: lPt.z,
+          lilyColor: lPt.color, lilySize: lPt.size
+        });
+      }
+
+      flameParticles = [];
+      const candlePositions = [
+        { x: -38, z: -12 }, { x: -18, z: 20 }, { x: 0, z: -26 }, { x: 18, z: 20 }, { x: 38, z: -12 }
+      ];
+      candlePositions.forEach((pos, idx) => {
+        for (let f = 0; f < 50; f++) {
+          const isCore = f < 15;
+          flameParticles.push({
+            baseX: pos.x, baseY: -155, baseZ: pos.z,
+            x: pos.x + (Math.random() - 0.5) * 6,
+            y: -155 - Math.random() * 22,
+            z: pos.z + (Math.random() - 0.5) * 6,
+            size: isCore ? 1.4 : 2.2,
+            color: isCore ? '#fffacd' : (Math.random() > 0.4 ? '#ffd700' : '#ff8c00'),
+            isCore: isCore
+          });
+        }
+      });
+
+      buildDecorativeSparkleParticles();
+      initBackgroundBokeh();
+    }
+
+    function initBackgroundBokeh() {
+      backgroundBokeh = [];
+      for (let i = 0; i < 90; i++) {
+        backgroundBokeh.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          size: Math.random() * 3.2 + 0.8,
+          alpha: Math.random() * 0.7 + 0.2,
+          speed: Math.random() * 0.3 + 0.1
+        });
+      }
+    }
+
+    function setupInteractions() {
+      window.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        lastMouseX = e.clientX;
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const deltaX = e.clientX - lastMouseX;
+          targetAngleY += deltaX * 0.007;
+          lastMouseX = e.clientX;
+        }
+      });
+      window.addEventListener('mouseup', () => isDragging = false);
+
+      window.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          lastMouseX = e.touches[0].clientX;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length === 1) {
+          const deltaX = e.touches[0].clientX - lastMouseX;
+          targetAngleY += deltaX * 0.007;
+          lastMouseX = e.touches[0].clientX;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => isDragging = false);
+    }
+
+    function render() {
+      if (!canvas || !ctx) {
+        requestAnimationFrame(render);
+        return;
+      }
+
+      const width = canvas.width / (window.devicePixelRatio || 1);
+      const height = canvas.height / (window.devicePixelRatio || 1);
+
+      ctx.clearRect(0, 0, width, height);
+
+      if (!isDragging) {
+        targetAngleY += 0.0035;
+      }
+      angleY += (targetAngleY - angleY) * 0.09;
+
+      const targetMorph = state.lilyBloomed ? 1 : 0;
+      state.morphProgress += (targetMorph - state.morphProgress) * 0.045;
+      const t = state.morphProgress;
+
+      const auraGradient = ctx.createRadialGradient(width / 2, height / 2 + 10, 30, width / 2, height / 2 + 10, 260);
+      auraGradient.addColorStop(0, `rgba(255, ${Math.floor(220 - t * 30)}, ${Math.floor(230 + t * 10)}, 0.55)`);
+      auraGradient.addColorStop(1, 'rgba(255, 245, 247, 0)');
+      ctx.fillStyle = auraGradient;
+      ctx.fillRect(0, 0, width, height);
+
+      backgroundBokeh.forEach(sparkle => {
+        sparkle.y -= sparkle.speed;
+        if (sparkle.y < -10) sparkle.y = height + 10;
+
+        ctx.beginPath();
+        ctx.arc(sparkle.x, sparkle.y, sparkle.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(240, 160, 180, ${sparkle.alpha})`;
+        ctx.fill();
+      });
+
+      const fov = 380;
+      const pitch = 0.36;
+      const cosPitch = Math.cos(pitch);
+      const sinPitch = Math.sin(pitch);
+      const cosY = Math.cos(angleY);
+      const sinY = Math.sin(angleY);
+
+      const projected = [];
+
+      mainParticles.forEach(p => {
+        const curX = p.cakeX + (p.lilyX - p.cakeX) * t;
+        const curY = p.cakeY + (p.lilyY - p.cakeY) * t;
+        const curZ = p.cakeZ + (p.lilyZ - p.cakeZ) * t;
+        const curSize = p.cakeSize + (p.lilySize - p.cakeSize) * t;
+        const curColor = t > 0.5 ? p.lilyColor : p.cakeColor;
+
+        const rx = curX * cosY - curZ * sinY;
+        const rz = curX * sinY + curZ * cosY;
+        const ry = curY * cosPitch - rz * sinPitch;
+        const rzFinal = curY * sinPitch + rz * cosPitch;
+
+        const scale = fov / (fov + rzFinal + 300);
+        const screenX = width / 2 + rx * scale;
+        const screenY = height / 2 + 30 + ry * scale;
+
+        projected.push({
+          x: screenX,
+          y: screenY,
+          size: curSize * scale * 1.15,
+          color: curColor,
+          z: rzFinal,
+          type: 'main'
+        });
+      });
+
+      if (state.candlesLit && t < 0.3) {
+        const flameAlpha = 1 - (t / 0.3);
+        flameParticles.forEach(p => {
+          let px = p.baseX + (Math.random() - 0.5) * 6;
+          let py = p.y - Math.random() * 0.8;
+          if (py < p.baseY - 24) py = p.baseY;
+          let pz = p.baseZ + (Math.random() - 0.5) * 6;
+
+          const rx = px * cosY - pz * sinY;
+          const rz = px * sinY + pz * cosY;
+          const ry = py * cosPitch - rz * sinPitch;
+          const rzFinal = py * sinPitch + rz * cosPitch;
+
+          const scale = fov / (fov + rzFinal + 300);
+          const screenX = width / 2 + rx * scale;
+          const screenY = height / 2 + 30 + ry * scale;
+
+          projected.push({
+            x: screenX, y: screenY,
+            size: p.size * scale * 1.2,
+            color: p.color,
+            z: rzFinal,
+            type: 'flame',
+            alpha: flameAlpha,
+            isCore: p.isCore
+          });
+        });
+      }
+
+      if (t > 0.2) {
+        const decAlpha = (t - 0.2) / 0.8;
+        decorativeSparkleParticles.forEach(dp => {
+          const rx = dp.x * cosY - dp.z * sinY;
+          const rz = dp.x * sinY + dp.z * cosY;
+          const ry = dp.y * cosPitch - rz * sinPitch;
+          const rzFinal = dp.y * sinPitch + rz * cosPitch;
+
+          const scale = fov / (fov + rzFinal + 300);
+          const screenX = width / 2 + rx * scale;
+          const screenY = height / 2 + 30 + ry * scale;
+
+          projected.push({
+            x: screenX, y: screenY,
+            size: dp.size * scale,
+            color: dp.color,
+            symbol: dp.symbol,
+            z: rzFinal,
+            type: dp.type,
+            alpha: decAlpha
+          });
+        });
+      }
+
+      smokeParticles.forEach((sp, idx) => {
+        sp.y -= sp.vy;
+        sp.x += Math.sin(sp.y * 0.04) * 0.5;
+        sp.alpha -= 0.007;
+
+        if (sp.alpha <= 0) {
+          smokeParticles.splice(idx, 1);
+          return;
+        }
+
+        const rx = sp.x * cosY - sp.z * sinY;
+        const rz = sp.x * sinY + sp.z * cosY;
+        const ry = sp.y * cosPitch - rz * sinPitch;
+        const rzFinal = sp.y * sinPitch + rz * cosPitch;
+
+        const scale = fov / (fov + rzFinal + 300);
+        const screenX = width / 2 + rx * scale;
+        const screenY = height / 2 + 30 + ry * scale;
+
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, sp.size * scale, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220, 220, 220, ${sp.alpha})`;
+        ctx.fill();
+      });
+
+      floatingPetals.forEach((pt, idx) => {
+        pt.x += pt.vx + Math.sin(pt.y * 0.02) * 0.9;
+        pt.y += pt.vy;
+        pt.rotation += pt.vRot;
+        pt.alpha -= 0.003;
+
+        if (pt.alpha <= 0) {
+          floatingPetals.splice(idx, 1);
+          return;
+        }
+
+        ctx.save();
+        ctx.translate(pt.x, pt.y);
+        ctx.rotate(pt.rotation);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, pt.size, pt.size * 2.1, 0, 0, Math.PI * 2);
+        ctx.fillStyle = pt.color;
+        ctx.globalAlpha = Math.max(0, pt.alpha);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      confettiParticles.forEach((cp, idx) => {
+        cp.x += cp.vx; cp.y += cp.vy; cp.vy += 0.09;
+        cp.rotation += cp.vRot; cp.alpha -= 0.004;
+
+        if (cp.alpha <= 0) {
+          confettiParticles.splice(idx, 1);
+          return;
+        }
+
+        ctx.save();
+        ctx.translate(cp.x, cp.y);
+        ctx.rotate(cp.rotation);
+        ctx.fillStyle = cp.color;
+        ctx.globalAlpha = Math.max(0, cp.alpha);
+        ctx.fillRect(-cp.size / 2, -cp.size / 2, cp.size, cp.size * 1.6);
+        ctx.restore();
+      });
+
+      projected.sort((a, b) => b.z - a.z);
+
+      projected.forEach(p => {
+        if (p.type === 'symbol') {
+          ctx.font = `${Math.floor(p.size * 9)}px sans-serif`;
+          ctx.globalAlpha = p.alpha || 1;
+          ctx.fillText(p.symbol, p.x, p.y);
+          ctx.globalAlpha = 1;
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, Math.max(0.4, p.size), 0, Math.PI * 2);
+          if (p.alpha !== undefined) {
+            ctx.globalAlpha = p.alpha;
+          }
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+
+          if (p.type === 'flame' && !p.isCore) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 2.8, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 190, 50, 0.25)';
+            ctx.fill();
+          }
+        }
+      });
+
+      requestAnimationFrame(render);
+    }
+
+    function handleStageClick(e) {
+      if (!state.lilyBloomed) {
+        state.candlesLit = false;
+        state.lilyBloomed = true;
+
+        const candlePositions = [
+          { x: -38, z: -12 }, { x: -18, z: 20 }, { x: 0, z: -26 }, { x: 18, z: 20 }, { x: 38, z: -12 }
+        ];
+        candlePositions.forEach(pos => {
+          for (let i = 0; i < 20; i++) {
+            smokeParticles.push({
+              x: pos.x + (Math.random() - 0.5) * 6,
+              y: -155 - Math.random() * 12,
+              z: pos.z + (Math.random() - 0.5) * 6,
+              vy: Math.random() * 1.0 + 0.5,
+              size: Math.random() * 3.8 + 2,
+              alpha: 0.8
+            });
+          }
+        });
+
+        triggerCelebrationExplosion();
+
+        document.getElementById('candleInstruction').innerText = 'Chạm vào bó hoa để mở thiệp lời nhắn 💌';
+        document.getElementById('viewModalBtn').classList.remove('hidden');
+
+        playBlowoutSound();
+
+        const hint = document.getElementById('tapHint');
+        hint.classList.remove('opacity-0');
+
+        setTimeout(() => {
+          openModal();
+        }, 2500);
+
+      } else {
+        openModal();
+      }
+    }
+
+    function triggerCelebrationExplosion() {
+      const colors = ['#ff8da9', '#ff5c8d', '#ffffff', '#ffc8d7', '#ffd700', '#ff3b65'];
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      for (let i = 0; i < 140; i++) {
+        confettiParticles.push({
+          x: width / 2 + (Math.random() - 0.5) * 140,
+          y: height / 2 - 50 + (Math.random() - 0.5) * 80,
+          vx: (Math.random() - 0.5) * 16,
+          vy: -Math.random() * 13 - 5,
+          size: Math.random() * 9 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.3,
+          alpha: 1.0
+        });
+      }
+
+      for (let i = 0; i < 55; i++) {
+        floatingPetals.push({
+          x: width / 2 + (Math.random() - 0.5) * 200,
+          y: height / 2 - 100 + (Math.random() - 0.5) * 100,
+          vx: (Math.random() - 0.5) * 6,
+          vy: Math.random() * 2.2 + 1.2,
+          size: Math.random() * 7 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.1,
+          alpha: 0.95
+        });
+      }
+    }
+
+    function relightCandles() {
+      state.candlesLit = true;
+      state.lilyBloomed = false;
+      document.getElementById('candleInstruction').innerText = 'Chạm vào bánh để thổi nến.';
+      document.getElementById('viewModalBtn').classList.add('hidden');
+      document.getElementById('tapHint').classList.add('opacity-0');
+      closeModal();
+    }
+
+    function openModal() {
+      document.getElementById('cardModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('cardModal').classList.add('hidden');
+    }
+
+
+    // --- Audio Engine ---
+    const melody = [
+      { note: 'G4', duration: 0.3 }, { note: 'G4', duration: 0.3 }, { note: 'A4', duration: 0.6 }, { note: 'G4', duration: 0.6 }, { note: 'C5', duration: 0.6 }, { note: 'B4', duration: 1.0 },
+      { note: 'G4', duration: 0.3 }, { note: 'G4', duration: 0.3 }, { note: 'A4', duration: 0.6 }, { note: 'G4', duration: 0.6 }, { note: 'D5', duration: 0.6 }, { note: 'C5', duration: 1.0 },
+      { note: 'G4', duration: 0.3 }, { note: 'G4', duration: 0.3 }, { note: 'G5', duration: 0.6 }, { note: 'E5', duration: 0.6 }, { note: 'C5', duration: 0.6 }, { note: 'B4', duration: 0.6 }, { note: 'A4', duration: 0.8 },
+      { note: 'F5', duration: 0.3 }, { note: 'F5', duration: 0.3 }, { note: 'E5', duration: 0.6 }, { note: 'C5', duration: 0.6 }, { note: 'D5', duration: 0.6 }, { note: 'C5', duration: 1.2 }
+    ];
+
+    const noteFreqs = {
+      'G4': 392.00, 'A4': 440.00, 'B4': 493.88, 'C5': 523.25,
+      'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99
+    };
+
+    function playNote(freq, duration) {
+      if (!state.audioCtx) return;
+      const osc = state.audioCtx.createOscillator();
+      const gain = state.audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, state.audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.001, state.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.24, state.audioCtx.currentTime + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, state.audioCtx.currentTime + duration * 0.9);
+      osc.connect(gain);
+      gain.connect(state.audioCtx.destination);
+      osc.start();
+      osc.stop(state.audioCtx.currentTime + duration);
+    }
+
+    function playBlowoutSound() {
+      if (!state.audioCtx) {
+        state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+      notes.forEach((freq, idx) => {
+        setTimeout(() => playNote(freq, 0.45), idx * 85);
+      });
+    }
+
+    function scheduleNextMusicNote() {
+      if (!state.isPlayingMusic || state.customAudioUrl) return;
+      const noteData = melody[state.currentNoteIndex];
+      playNote(noteFreqs[noteData.note], noteData.duration);
+      state.currentNoteIndex = (state.currentNoteIndex + 1) % melody.length;
+      state.musicTimer = setTimeout(scheduleNextMusicNote, noteData.duration * 650);
+    }
+
+    function playMusic() {
+      state.isPlayingMusic = true;
+      document.getElementById('musicDiscIcon').classList.add('animate-spin');
+      document.getElementById('musicLabel').innerText = state.customAudioUrl ? 'Playing Track ♪' : 'Playing Synth ♪';
+
+      if (state.customAudioUrl) {
+        document.getElementById('customAudioPlayer').play().catch(err => console.log(err));
+      } else {
+        if (!state.audioCtx) state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (state.audioCtx.state === 'suspended') state.audioCtx.resume();
+        state.currentNoteIndex = 0;
+        scheduleNextMusicNote();
+      }
+    }
+
+    function stopMusic() {
+      state.isPlayingMusic = false;
+      document.getElementById('musicDiscIcon').classList.remove('animate-spin');
+      document.getElementById('musicLabel').innerText = 'Music';
+
+      if (state.customAudioUrl) {
+        document.getElementById('customAudioPlayer').pause();
+      } else {
+        clearTimeout(state.musicTimer);
+      }
+    }
+
+    function toggleMusic() {
+      if (state.isPlayingMusic) stopMusic();
+      else playMusic();
+    }
+
+    // Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      setupInteractions();
+      parseUrlParams();
+      
+      window.addEventListener('resize', () => {
+        if (!document.getElementById('cakeView').classList.contains('hidden')) {
+          initCakeCanvas();
+        }
+      });
+    });
+
+    window.onload = function() {
+      render();
+    };
+  </script>
+</body>
+</html>
